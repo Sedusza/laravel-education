@@ -7,5 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class AgeRestriction extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+
+    public function ageRestriction()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    public static function getageRestrictionList()
+    {
+        return self::pluck('name', 'id')->toArray();
+    }
 }

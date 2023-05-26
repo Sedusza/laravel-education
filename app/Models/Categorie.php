@@ -7,5 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Categorie extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+
+    public function categorie()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    public static function getCategorieList()
+    {
+        return self::pluck('name', 'id')->toArray();
+    }
 }

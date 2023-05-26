@@ -1,55 +1,83 @@
-<?php
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Игры - Фильтр и поиск</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            padding: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function() {
+            $('#filterForm').submit(function(e) {
+                e.preventDefault();
 
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Http\Request;
+                var formData = $(this).serialize();
+                var url = '/games?' + formData;
 
-define('LARAVEL_START', microtime(true));
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    success: function(data) {
+                        displayGames(data);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(error);
+                    }
+                });
+            });
 
-/*
-|--------------------------------------------------------------------------
-| Check If The Application Is Under Maintenance
-|--------------------------------------------------------------------------
-|
-| If the application is in maintenance / demo mode via the "down" command
-| we will load this file so that any pre-rendered content can be shown
-| instead of starting the framework, which could cause an exception.
-|
-*/
+            function displayGames(data) {
+                // Очистка текущих результатов
+                $('#gameList').empty();
 
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
-}
+                // Вывод новых результатов
+                if (data.data.length > 0) {
+                    $.each(data.data, function(index, game) {
+                        var listItem = '<div class="card mb-3">' +
+                            '<div class="card-body">' +
+                            '<h5 class="card-title">' + game.name + '</h5>' +
+                            '<p class="card-text">Автор: ' + game.author + '</p>' +
+                            '<p class="card-text">Категория: ' + game.category + '</p>' +
+                            '<p class="card-text">Цена: ' + game.price + '</p>' +
+                            '<p class="card-text">Кем создано: ' + game.created_by + '</p>' +
+                            '</div>' +
+                            '</div>';
+                        $('#gameList').append(listItem);
+                    });
+                } else {
+                    $('#gameList').append('<div class="alert alert-info" role="alert">Нет результатов.</div>');
+                }
 
-/*
-|--------------------------------------------------------------------------
-| Register The Auto Loader
-|--------------------------------------------------------------------------
-|
-| Composer provides a convenient, automatically generated class loader for
-| this application. We just need to utilize it! We'll simply require it
-| into the script here so we don't need to manually load our classes.
-|
-*/
+                // Вывод пагинации
+                $('#pagination').html(data.links);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Игры - Фильтр и поиск</h1>
 
-require __DIR__.'/../vendor/autoload.php';
+        <form id="filterForm" class="mt-4">
+            <div class="form-row">
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="name" placeholder="Название">
+                </div>
+                <div class="col-md-4">
+                    <input type="text" class="form-control" name="author" placeholder="Автор">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-primary">Применить фильтр</button>
+                </div>
+            </div>
+        </form>
 
-/*
-|--------------------------------------------------------------------------
-| Run The Application
-|--------------------------------------------------------------------------
-|
-| Once we have the application, we can handle the incoming request using
-| the application's HTTP kernel. Then, we will send the response back
-| to this client's browser, allowing them to enjoy our application.
-|
-*/
+        <div id="gameList" class="mt-4"></div>
 
-$app = require_once __DIR__.'/../bootstrap/app.php';
-
-$kernel = $app->make(Kernel::class);
-
-$response = $kernel->handle(
-    $request = Request::capture()
-)->send();
-
-$kernel->terminate($request, $response);
+        <div id="pagination" class="mt-4"></div>
+    </div>
+</body>

@@ -7,5 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Publisher extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+
+    public function games()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    public static function getPublisherList()
+    {
+        return self::pluck('name', 'id')->toArray();
+    }
 }

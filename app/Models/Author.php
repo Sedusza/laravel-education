@@ -7,5 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
-    use HasFactory;
+    protected $fillable = [
+        'name',
+    ];
+
+    public function author()
+    {
+        return $this->hasMany(Game::class);
+    }
+
+    public static function getAuthorList()
+    {
+        return self::pluck('name', 'id')->toArray();
+    }
 }
