@@ -7,26 +7,47 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function index(Request $request)
+    public function index()
+    {
+        $games = Game::paginate(10);
+        return view('games.index', compact('games'));
+    }
+
+    public function filter(Request $request)
     {
         $query = Game::query();
 
-        // Применение фильтров
         if ($request->has('name')) {
             $query->where('name', 'like', '%' . $request->input('name') . '%');
         }
 
         if ($request->has('author')) {
-            $query->where('author', 'like', '%' . $request->input('author') . '%');
+            $query->whereHas('author', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('author') . '%');
+            });
         }
 
-        // Применение сортировки
-        $query->orderBy('name', 'asc');
+        if ($request->has('category')) {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('category') . '%');
+            });
+        }
 
-        // Получение пагинированных результатов
-        $perPage = 10; // Количество записей на страницу
-        $games = $query->paginate($perPage);
+        if ($request->has('price_min')) {
+            $query->where('price', '>=', $request->input('price_min'));
+        }
 
-        return response()->json($games);
+        if ($request->has('price_max')) {
+            $query->where('price', '<=', $request->input('price_max'));
+        }
+
+        if ($request->has('created_by')) {
+            $query->whereHas('createdBy', function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->input('created_by') . '%');
+            });
+        }
+
+        $games = $query->paginate(10);
+        return view('games.index', compact('games'));
     }
 }

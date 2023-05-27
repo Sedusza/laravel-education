@@ -14,7 +14,7 @@ class GameFactory extends Factory
     {
         $categoryIds = Categorie::pluck('id')->toArray(); // Получаем массив всех существующих ID категорий
         $authorIds = Author::pluck('id')->toArray(); // Получаем массив всех существующих ID авторов
-        $ageRestrictionIds = AgeRestriction::pluck('id')->toArray(); // Получаем массив всех существующих ID авторов
+        $ageRestrictionIds = AgeRestriction::pluck('id')->toArray(); // Получаем массив всех существующих ID возрастных ограничений
 
         return [
             'name' => $this->faker->name(),

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,4 +26,11 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    public function mapWebRoutes()
+{
+    Route::middleware('web')
+        ->namespace($this->namespace)
+        ->group(base_path('routes/web.php'));
+}
 }
