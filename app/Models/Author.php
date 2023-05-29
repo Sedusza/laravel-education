@@ -11,7 +11,7 @@ class Author extends Model
         'name',
     ];
 
-    public function author()
+    public function game()
     {
         return $this->hasMany(Game::class);
     }

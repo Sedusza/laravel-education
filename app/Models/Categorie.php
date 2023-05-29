@@ -11,7 +11,7 @@ class Categorie extends Model
         'name',
     ];
 
-    public function categorie()
+    public function game()
     {
         return $this->hasMany(Game::class);
     }

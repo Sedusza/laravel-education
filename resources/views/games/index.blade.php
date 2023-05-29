@@ -18,11 +18,25 @@
                 </div>
                 <div class="col">
                     <label for="author">Автор:</label>
-                    <input type="text" name="author" class="form-control" value="{{ request('author') }}">
+                    <select name="author" class="form-control">
+                        <option value="">Автор</option>
+                        @foreach($authors as $author)
+                            <option value="{{ $author->id }}" {{ request('author') == $author->id ? 'selected' : '' }}>
+                                {{ $author->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col">
                     <label for="category">Категория:</label>
-                    <input type="text" name="category" class="form-control" value="{{ request('category') }}">
+                    <select name="category" class="form-control">
+                        <option value="">Категория</option>
+                        @foreach($categories as $category)
+                            <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>
+                                {{ $category->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col">
                     <label for="price_min">Цена мин:</label>
@@ -34,7 +48,14 @@
                 </div>
                 <div class="col">
                     <label for="created_by">Кем создано:</label>
-                    <input type="text" name="created_by" class="form-control" value="{{ request('created_by') }}">
+                    <select name="created_by" class="form-control">
+                        <option value="">Кем создано</option>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}" {{ request('created_by') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
+                        @endforeach
+                    </select>
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Поиск</button>
@@ -63,8 +84,8 @@
                     <td>{{ $game->price }}</td>
                     <td>{{ $game->stock_quantity }}</td>
                     <td>{{ $game->category->name }}</td>
-                    <td>{{ $game->author->name }}</td>
-                    <td>{{ $game->createdBy ? $game->createdBy->name : 'Unknown' }}</td>
+                    <td>{{ $game->author->name ?? '-' }}</td>
+                    <td>{{ $game->createdBy ? $game->createdBy->name : '-' }}</td>
                 </tr>
                 @endforeach
             </tbody>
