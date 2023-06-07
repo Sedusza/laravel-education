@@ -63,7 +63,38 @@ class GameController extends Controller
         return view('games.index', compact('games', 'authors', 'categories', 'users'));
     }
 
+    public function show($id)
+    {
+        $game = Game::findOrFail($id);
+        return view('games.show', compact('game'));
+    }
+
     public function create(){
 
     }
+    public function edit()
+    {
+
+        $game = Game::findOrFail($id); // Получение игры по ее ID
+
+        // Здесь также можете передать другие данные, необходимые для редактирования
+
+        return view('games.edit', compact('game'));
+
+    }
+
+    public function update(Request $request, $id)
+{
+    $game = Game::findOrFail($id); // Получение игры по ее ID
+
+    // Валидация данных, полученных из формы
+
+    $game->name = $request->input('name');
+    // Обновите остальные поля, которые нужно обновить
+
+    $game->save();
+
+    return redirect()->route('games.show', $game->id)->with('success', 'Игра успешно обновлена.');
+}
+
 }

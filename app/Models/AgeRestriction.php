@@ -11,7 +11,7 @@ class AgeRestriction extends Model
         'name',
     ];
 
-    public function ageRestriction()
+    public function game()
     {
         return $this->hasMany(Game::class);
     }

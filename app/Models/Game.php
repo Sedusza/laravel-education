@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
 
 class Game extends Model
 {
@@ -23,5 +22,10 @@ class Game extends Model
     public function createdBy()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function ageRestriction()
+    {
+        return $this->belongsTo(AgeRestriction::class);
     }
 }

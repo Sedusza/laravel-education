@@ -4,14 +4,62 @@
     <title>Игры</title>
     <!-- Подключение Bootstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        @keyframes hoverFill {
+          0% { background-color: transparent; }
+          100% { background-color: #89cff0; }
+        }
+
+        .table-hover tbody tr:hover {
+          animation: hoverFill 1.0s ease-in-out;
+          animation-fill-mode: forwards; /* Анимация останавливается на последнем кадре */
+        }
+
+        /* Создаем разные оттенки голубого цвета для плавного заполнения */
+        @keyframes gradientFill {
+          0% { background-color: #89cff0; }
+          50% { background-color: #a1d8f7; }
+          100% { background-color: #c3e5fc; }
+        }
+
+        .fade-in {
+          animation: fadeIn 1.0s ease-in-out;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="storage/app/web/logo.png"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключить навигацию">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Главная</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">О нас</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Услуги</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Контакты</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
         <h1>Игры</h1>
 
         <!-- Форма для фильтрации -->
+
         <form action="{{ route('games.filter') }}" method="GET">
-            <div class="form-row">
+            <div class="form-row align-items-end">
                 <div class="col">
                     <label for="name">Имя:</label>
                     <input type="text" name="name" class="form-control" value="{{ request('name') }}">
@@ -64,7 +112,7 @@
         </form>
 
         <!-- Таблица со списком игр -->
-        <table class="table">
+        <table class="table table-hover fade-in">
             <thead>
                 <tr>
                     <th>Имя</th>
@@ -78,7 +126,7 @@
             </thead>
             <tbody>
                 @foreach($games as $game)
-                <tr>
+                <tr onclick="window.location='{{ route('games.show', $game->id) }}';" style="cursor: pointer;">
                     <td>{{ $game->name }}</td>
                     <td>{{ $game->description }}</td>
                     <td>{{ $game->price }}</td>
